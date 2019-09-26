@@ -1,7 +1,7 @@
 TARGET = target/debug
 ifdef CARGO_RELEASE
 	RELEASE = --release
-	TARGET = target/release
+	TARGET = target/aarch64-unknown-linux-gnu/release
 endif
 
 ifndef PACKAGE_VERSION
@@ -17,7 +17,7 @@ PKG = $(PKG_NAME).tar.gz
 SHASUM = shasum -a 256
 
 CARGO ?= cargo
-CARGO_BUILD = $(CARGO) build --frozen $(RELEASE)
+CARGO_BUILD = $(CARGO) build --frozen $(RELEASE) --target=aarch64-unknown-linux-gnu
 CARGO_TEST = $(CARGO) test --all --frozen $(RELEASE)
 CARGO_FMT = $(CARGO) fmt --all
 
@@ -39,7 +39,7 @@ $(PKG_ROOT)/$(PKG): $(TARGET_BIN)
 	mkdir -p $(PKG_BASE)/bin
 	cp LICENSE $(PKG_BASE)
 	cp $(TARGET_BIN) $(PKG_BASE)/bin/linkerd2-proxy
-	strip $(PKG_BASE)/bin/linkerd2-proxy
+	aarch64-linux-gnu-strip $(PKG_BASE)/bin/linkerd2-proxy
 ifdef CARGO_DEBUG
 	if which objcopy >/dev/null ; then \
 		objcopy $(TARGET_BIN) $(PKG_BASE)/linkerd2-proxy.obj ; \
